@@ -32,7 +32,7 @@ public class TaskRepository {
         new DeleteTaskAsyncTask(taskDao).execute(task);
     }
 
-    public void deleteAllNotes(){
+    public void deleteAllTasks(){
         new DeleteAllTasksAsyncTask(taskDao).execute();
     }
 
