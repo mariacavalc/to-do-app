@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/ic_add.xml" value="0.2555" />
+        <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/drawable/ic_horizontal_line.xml" value="0.2555" />
         <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/activity_add_task_ativity.xml" value="0.25" />
         <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/task_item.xml" value="0.25" />
+        <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/layout/task_item.xml" value="0.536" />
         <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/menu/add_task_menu.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/RAMSONS/AndroidStudioProjects/ToDoApp/app/src/main/res/menu/main_menu.xml" value="0.25" />
       </map>

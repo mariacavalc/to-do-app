@@ -19,9 +19,6 @@ import android.widget.Toast;
 import com.madu.to_doapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int ADD_TASK_REQUEST = 1;
-    public static final int EDIT_NOTE_REQUEST = 2;
-
     private ActivityMainBinding binding;
     private TaskViewModel taskViewModel;
 
@@ -108,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     taskViewModel.update(task);
                     Toast.makeText(MainActivity.this, "Task updated", Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(MainActivity.this, "Task can't be updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Task not updated", Toast.LENGTH_SHORT).show();
                 }
             });
 

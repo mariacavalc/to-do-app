@@ -3,9 +3,11 @@ package com.madu.to_doapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,7 +52,17 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
         Task task = getItem(position);
         holder.textViewTitle.setText(task.getTitle());
         holder.textViewDescription.setText(task.getDescription());
-        holder.textViewPriority.setText(String.valueOf(task.getPriority()));
+        switch (task.getPriority()){
+            case 1:
+                holder.imageViewPriority.setColorFilter(ContextCompat.getColor(holder.imageViewPriority.getContext(), R.color.green_priority));
+                break;
+            case 2:
+                holder.imageViewPriority.setColorFilter(ContextCompat.getColor(holder.imageViewPriority.getContext(), R.color.yellow_priority));
+                break;
+            case 3:
+                holder.imageViewPriority.setColorFilter(ContextCompat.getColor(holder.imageViewPriority.getContext(), R.color.red_priority));
+                break;
+        }
     }
 
     public Task getTaskAt(int position){
@@ -60,13 +72,13 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
     class TaskHolder extends RecyclerView.ViewHolder{
         private TextView textViewTitle;
         private TextView textViewDescription;
-        private TextView textViewPriority;
+        private ImageView imageViewPriority;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.text_view_title);
             textViewDescription = itemView.findViewById(R.id.text_view_description);
-            textViewPriority = itemView.findViewById(R.id.text_view_priority);
+            imageViewPriority = itemView.findViewById(R.id.image_view_priority);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
