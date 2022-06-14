@@ -10,27 +10,38 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.madu.to_doapp.databinding.ActivityAddTaskBinding;
+import com.madu.to_doapp.databinding.ActivityAddEditTaskBinding;
 
-public class AddTaskActivity extends AppCompatActivity {
+public class AddEditTaskActivity extends AppCompatActivity {
 
+    public static final String EXTRA_ID = "com.madu.to_doapp.EXTRA_ID";
     public static final String EXTRA_TITLE = "com.madu.to_doapp.EXTRA_TITLE";
     public static final String EXTRA_DESCRIPTION = "com.madu.to_doapp.EXTRA_DESCRIPTION";
     public static final String EXTRA_PRIORITY = "com.madu.to_doapp.EXTRA_PRIORITY";
 
-    private ActivityAddTaskBinding binding;
+    private ActivityAddEditTaskBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityAddTaskBinding.inflate(getLayoutInflater());
+        binding = ActivityAddEditTaskBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         binding.numberPickerPriority.setMinValue(1);
         binding.numberPickerPriority.setMaxValue(3);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        setTitle("Add Task");
+
+        Intent intent = getIntent();
+
+        if (intent.hasExtra(EXTRA_ID)){
+            setTitle("Edit Task");
+            binding.editTextTitle.setText(intent.getStringExtra(EXTRA_TITLE));
+            binding.editTextDescription.setText(intent.getStringExtra(EXTRA_DESCRIPTION));
+            binding.numberPickerPriority.setValue(intent.getIntExtra(EXTRA_PRIORITY, 1));
+        }else {
+            setTitle("Add Task");
+        }
     }
 
     private void saveTask(){
@@ -47,6 +58,11 @@ public class AddTaskActivity extends AppCompatActivity {
         data.putExtra(EXTRA_TITLE, title);
         data.putExtra(EXTRA_DESCRIPTION, description);
         data.putExtra(EXTRA_PRIORITY, priority);
+
+        int id = getIntent().getIntExtra(EXTRA_ID, -1);
+        if (id != -1){
+            data.putExtra(EXTRA_ID, id);
+        }
 
         setResult(RESULT_OK, data);
         finish();

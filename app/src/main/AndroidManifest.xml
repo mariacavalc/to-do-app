@@ -14,7 +14,7 @@
         android:theme="@style/Theme.ToDoApp"
         tools:targetApi="31">
         <activity
-            android:name=".AddTaskActivity"
+            android:name=".AddEditTaskActivity"
             android:parentActivityName=".MainActivity"
             android:exported="false" />
         <activity

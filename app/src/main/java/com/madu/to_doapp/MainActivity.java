@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.madu.to_doapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+    public static final int ADD_TASK_REQUEST = 1;
+    public static final int EDIT_NOTE_REQUEST = 2;
 
     private ActivityMainBinding binding;
     private TaskViewModel taskViewModel;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         binding.buttonAddTask.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, AddTaskActivity.class);
+            Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
             addTaskActivityLauncher.launch(intent);
         });
 
@@ -57,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Task deleted", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(binding.recyclerView);
+
+        adapter.setOnItemClickListener(task ->{
+            Intent intent = new Intent(MainActivity.this, AddEditTaskActivity.class);
+            intent.putExtra(AddEditTaskActivity.EXTRA_ID, task.getId());
+            intent.putExtra(AddEditTaskActivity.EXTRA_TITLE, task.getTitle());
+            intent.putExtra(AddEditTaskActivity.EXTRA_DESCRIPTION, task.getDescription());
+            intent.putExtra(AddEditTaskActivity.EXTRA_PRIORITY, task.getPriority());
+            editTaskActivityLauncher.launch(intent);
+        });
     }
 
     ActivityResultLauncher <Intent> addTaskActivityLauncher = registerForActivityResult(
@@ -64,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == RESULT_OK){
                     Intent data = result.getData();
-                    String title = data.getStringExtra(AddTaskActivity.EXTRA_TITLE);
-                    String description = data.getStringExtra(AddTaskActivity.EXTRA_DESCRIPTION);
-                    Integer priority = data.getIntExtra(AddTaskActivity.EXTRA_PRIORITY, 1);
+                    String title = data.getStringExtra(AddEditTaskActivity.EXTRA_TITLE);
+                    String description = data.getStringExtra(AddEditTaskActivity.EXTRA_DESCRIPTION);
+                    Integer priority = data.getIntExtra(AddEditTaskActivity.EXTRA_PRIORITY, 1);
 
                     Task task = new Task(title, description, priority, false);
                     taskViewModel.insert(task);
@@ -74,6 +85,30 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(MainActivity.this, "Task not saved", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    ActivityResultLauncher <Intent> editTaskActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK){
+                    Intent data = result.getData();
+                    int id = data.getIntExtra(AddEditTaskActivity.EXTRA_ID, -1);
+                    if (id == -1){
+                        Toast.makeText(MainActivity.this, "Task can't be updated", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String title = data.getStringExtra(AddEditTaskActivity.EXTRA_TITLE);
+                    String description = data.getStringExtra(AddEditTaskActivity.EXTRA_DESCRIPTION);
+                    Integer priority = data.getIntExtra(AddEditTaskActivity.EXTRA_PRIORITY, 1);
+
+                    Task task = new Task(title, description, priority, false);
+                    task.setId(id);
+                    taskViewModel.update(task);
+                    Toast.makeText(MainActivity.this, "Task updated", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity.this, "Task can't be updated", Toast.LENGTH_SHORT).show();
                 }
             });
 
