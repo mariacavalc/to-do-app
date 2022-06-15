@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getAllTasks().observe(this, adapter::submitList);
+        taskViewModel.getAllTasks().observe(this, tasks -> adapter.submitList(UtilsKt.tasksFilter(tasks)));
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
