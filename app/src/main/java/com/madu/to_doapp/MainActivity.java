@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,9 +19,14 @@ import android.widget.Toast;
 
 import com.madu.to_doapp.databinding.ActivityMainBinding;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private TaskViewModel taskViewModel;
+    private Boolean showAllTasks = false;
+    private TaskAdapter adapter;
+    private LiveData<List<Task>> listLiveData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +43,13 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
-        TaskAdapter adapter = new TaskAdapter();
+        adapter = new TaskAdapter();
         recyclerView.setAdapter(adapter);
 
         taskViewModel = new ViewModelProvider(this).get(TaskViewModel.class);
-        taskViewModel.getAllTasks().observe(this, tasks -> adapter.submitList(UtilsKt.tasksFilter(tasks)));
+
+        listLiveData = taskViewModel.getAllTasks();
+        listLiveData.observe(this, this::updateRecyclerView);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -70,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
             Task taskUpdated = new Task(task.getTitle(), task.getDescription(), task.getPriority(), isDone);
             taskUpdated.setId(task.getId());
             taskViewModel.update(taskUpdated);
+        });
+
+        binding.switchAllTasks.setOnClickListener(v -> {
+            showAllTasks = binding.switchAllTasks.isChecked();
+            updateRecyclerView(listLiveData.getValue());
         });
     }
 
@@ -132,5 +145,13 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void updateRecyclerView(List<Task> tasks){
+        if (showAllTasks){
+            adapter.submitList(tasks);
+            return;
+        }
+        adapter.submitList(UtilsKt.tasksFilter(tasks));
     }
 }
