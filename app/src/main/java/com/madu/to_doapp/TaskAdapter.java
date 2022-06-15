@@ -3,6 +3,7 @@ package com.madu.to_doapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,12 +13,11 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
-    private OnItemClickListener listener;
+    private OnItemClickListener onItemClickListener;
+    private OnCheckBoxClickListener onCheckBoxClickListener;
 
     public TaskAdapter() {
         super(DIFF_CALLBACK);
@@ -63,6 +63,7 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
                 holder.imageViewPriority.setColorFilter(ContextCompat.getColor(holder.imageViewPriority.getContext(), R.color.red_priority));
                 break;
         }
+        holder.checkBoxIsDone.setChecked(task.getDone());
     }
 
     public Task getTaskAt(int position){
@@ -73,17 +74,26 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
         private TextView textViewTitle;
         private TextView textViewDescription;
         private ImageView imageViewPriority;
+        private CheckBox checkBoxIsDone;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.text_view_title);
             textViewDescription = itemView.findViewById(R.id.text_view_description);
             imageViewPriority = itemView.findViewById(R.id.image_view_priority);
+            checkBoxIsDone = itemView.findViewById(R.id.checkBox_isDone);
 
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
-                if (listener != null && position != RecyclerView.NO_POSITION){
-                    listener.onItemClick(getItem(position));
+                if (onItemClickListener != null && position != RecyclerView.NO_POSITION){
+                    onItemClickListener.onItemClick(getItem(position));
+                }
+            });
+
+            checkBoxIsDone.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (onCheckBoxClickListener != null && position != RecyclerView.NO_POSITION){
+                    onCheckBoxClickListener.onCheckBoxClick(getItem(position), checkBoxIsDone.isChecked());
                 }
             });
         }
@@ -94,6 +104,14 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskHolder> {
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
-        this.listener = listener;
+        this.onItemClickListener = listener;
+    }
+
+    public interface OnCheckBoxClickListener{
+        void onCheckBoxClick(Task task, Boolean isDone);
+    }
+
+    public void setOnCheckBoxClickListener(OnCheckBoxClickListener listener){
+        this.onCheckBoxClickListener = listener;
     }
 }

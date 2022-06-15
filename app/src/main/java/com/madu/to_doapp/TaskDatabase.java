@@ -50,6 +50,12 @@ public abstract class TaskDatabase extends RoomDatabase {
                     "Andar por pelo menos 20 min",
                     2,
                     false));
+            taskDao.insert(new Task(
+                    "Lavar roupa",
+                    "Só lavar roupas brancas",
+                    3,
+                    true));
+
             return null;
         }
     }

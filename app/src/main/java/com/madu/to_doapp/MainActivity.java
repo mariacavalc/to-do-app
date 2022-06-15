@@ -65,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(AddEditTaskActivity.EXTRA_PRIORITY, task.getPriority());
             editTaskActivityLauncher.launch(intent);
         });
+
+        adapter.setOnCheckBoxClickListener((task, isDone) -> {
+            Task taskUpdated = new Task(task.getTitle(), task.getDescription(), task.getPriority(), isDone);
+            taskUpdated.setId(task.getId());
+            taskViewModel.update(taskUpdated);
+        });
     }
 
     ActivityResultLauncher <Intent> addTaskActivityLauncher = registerForActivityResult(
